@@ -47,14 +47,18 @@ add_project_link_arguments(
 # --- Source Discovery ---
 subdir('sys')
 
-# --- Include Directories
+# --- Include Directories ---
 include_dirs = ['sys', 'include']
+
+# --- Dependencies from lib ---
+subdir('lib')
 
 # --- Executable Definition ---
 executable(
     'syros',
     sources: syros_sources,
     include_directories: include_directories(include_dirs),
+    dependencies: deps,
     install: true,
     name_suffix: 'elf',
 )

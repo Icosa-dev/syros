@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include <flanterm.h>
+#include <flanterm_backends/fb.h>
+#include <limine.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-
-#include "limine.h"
 
 __attribute__((used, section(".limine_requests"))) static volatile uint64_t
 	limine_base_revision[] = LIMINE_BASE_REVISION(6);
@@ -50,20 +51,16 @@ kmain(void)
 	struct limine_framebuffer *framebuffer =
 		framebuffer_request.response->framebuffers[0];
 
-	volatile uint32_t *fb_ptr = framebuffer->address;
-	for (size_t y = 0; y < framebuffer->height; y++)
-	{
-		for (size_t x = 0; x < framebuffer->width; x++)
-		{
-			uint32_t r = (x * 255) / framebuffer->width;
-			uint32_t g = (y * 255) / framebuffer->height;
-			uint32_t b = 128; // Constant blue for flavor
+	struct flanterm_context *ft_ctx = flanterm_fb_init(NULL, NULL,
+		framebuffer->address, framebuffer->width, framebuffer->height,
+		framebuffer->pitch, framebuffer->red_mask_size,
+		framebuffer->red_mask_shift, framebuffer->green_mask_size,
+		framebuffer->green_mask_shift, framebuffer->blue_mask_size,
+		framebuffer->blue_mask_shift, NULL, NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, 0, 0, 1, 0, 0, 0, 0);
 
-			uint32_t color = (r << 16) | (g << 8) | b;
-
-			fb_ptr[y * (framebuffer->pitch / 4) + x] = color;
-		}
-	}
+	const char msg[] = "Hello World!\n";
+	flanterm_write(ft_ctx, msg, sizeof(msg) - 1);
 
 	hcf();
 }
