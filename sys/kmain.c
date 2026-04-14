@@ -12,6 +12,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
+
+#include "disk.h"
 
 #define LIMINE_REQUEST __attribute__((used, section(".limine_requests")))
 #define LIMINE_REQUESTS_START \
@@ -64,11 +67,38 @@ kmain(void)
 		framebuffer->blue_mask_shift, NULL, NULL, NULL, NULL, NULL,
 		NULL, NULL, NULL, 0, 0, 1, 0, 0, 0, 0);
 
-	const char msg[] = "Hello World!\n";
-	flanterm_write(ft_ctx, msg, sizeof(msg) - 1);
+#define FLANTERM_WRITE(msg) flanterm_write(ft_ctx, msg, sizeof(msg) - 1)
+
+	FLANTERM_WRITE("Hello World!\r\n");
 
 	serial_init();
-	serial_puts(msg);
+	serial_puts("Testing serial output\r\n");
+
+	uint16_t write_buf[SECTOR_SIZE_WORDS];
+	uint16_t read_buf[SECTOR_SIZE_WORDS];
+	uint32_t target_lba = 100;
+
+	memset(write_buf, 0, sizeof(write_buf));
+	const char *msg = "HAI!!:3";
+	memcpy(write_buf, msg, strlen(msg));
+
+	write_sector(target_lba, write_buf);
+
+	memset(read_buf, 0, sizeof(read_buf));
+
+	read_sector(target_lba, read_buf);
+
+	if (memcmp(write_buf, read_buf, sizeof(read_buf)) == 0)
+	{
+		FLANTERM_WRITE("SUCCESSFULLY READ FROM AND WROTE TO DISK\r\n");
+		FLANTERM_WRITE("MESSAGE FROM DISK: \r\n");
+		const char *disk_msg = (const char *)read_buf;
+		FLANTERM_WRITE(disk_msg);
+		FLANTERM_WRITE("\r\n");
+	} else
+	{
+		FLANTERM_WRITE("COULD NOT PROPERLY READ OR WRITE TO DISK\r\n");
+	}
 
 	hcf();
 }

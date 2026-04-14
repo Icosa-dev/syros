@@ -3,13 +3,17 @@
 # isorun.sh - Runs syros.iso in qemu
 
 if [ -e ./syros.iso ]; then
+	echo "Creating disk image for storage"
+	qemu-img create disk.img 512M
+
 	echo "Running syros.iso in qemu-system-x86_64"
 	qemu-system-x86_64 \
     		-cdrom syros.iso \
     		-m 512M \
     		-boot d \
     		-enable-kvm \
-		-serial stdio
+		-serial stdio \
+		-hda disk.img
 else 
 	echo "syros.iso file not found"
 fi

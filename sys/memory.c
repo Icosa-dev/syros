@@ -7,8 +7,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "memory.h"
-
 void *
 memcpy(void *restrict dest, const void *restrict src, size_t n)
 {
@@ -64,4 +62,14 @@ memcmp(const void *s1, const void *s2, size_t n)
 	}
 
 	return 0;
+}
+
+size_t
+strlen(const char *str)
+{
+	const char *s;
+
+	for (s = str; *s; ++s)
+		;
+	return (s - str);
 }
