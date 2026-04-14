@@ -79,22 +79,22 @@ kmain(void)
 	uint32_t target_lba = 100;
 
 	memset(write_buf, 0, sizeof(write_buf));
-	const char *msg = "HAI!!:3";
+	const char *msg = "THIS MESSAGE IS BEING WRITTEN TO AND READ FROM THE DISK\r\n";
 	memcpy(write_buf, msg, strlen(msg));
 
-	write_sector(target_lba, write_buf);
+	write_sectors(target_lba, 1, write_buf);
 
 	memset(read_buf, 0, sizeof(read_buf));
 
-	read_sector(target_lba, read_buf);
+	read_sectors(target_lba, 1, read_buf);
 
 	if (memcmp(write_buf, read_buf, sizeof(read_buf)) == 0)
 	{
 		FLANTERM_WRITE("SUCCESSFULLY READ FROM AND WROTE TO DISK\r\n");
 		FLANTERM_WRITE("MESSAGE FROM DISK: \r\n");
 		const char *disk_msg = (const char *)read_buf;
-		FLANTERM_WRITE(disk_msg);
-		FLANTERM_WRITE("\r\n");
+		flanterm_write(ft_ctx, disk_msg, strlen(disk_msg));
+
 	} else
 	{
 		FLANTERM_WRITE("COULD NOT PROPERLY READ OR WRITE TO DISK\r\n");
