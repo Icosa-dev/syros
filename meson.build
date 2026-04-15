@@ -51,8 +51,12 @@ subdir('sys')
 # --- Include Directories ---
 include_dirs = ['sys', 'include']
 
-# --- Dependencies from lib ---
-subdir('lib')
+# --- Subprojects ---
+flanterm_proj = subproject('flanterm')
+flanterm_dep = flanterm_proj.get_variable('flanterm_dep')
+
+# --- Dependencies ---
+deps = [flanterm_dep]
 
 # --- Executable Definition ---
 executable(

@@ -56,6 +56,9 @@ dkms.conf
 
 # meson generated files
 build/
+subprojects/*
+!subprojects/*.wrap
+!subprojects/packagefiles/
 
 # isogen generated files
 limine/
