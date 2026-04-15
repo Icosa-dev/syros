@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include <sys/_asm.h>
+#include <sys/asm.h>
 #include <sys/serial.h>
 
 #include <stdint.h>

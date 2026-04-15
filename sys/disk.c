@@ -4,11 +4,10 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include <sys/_asm.h>
+#include <sys/asm.h>
+#include <sys/disk.h>
 
 #include <stdint.h>
-
-#include "disk.h"
 
 static void
 ata_wait_ready(void)

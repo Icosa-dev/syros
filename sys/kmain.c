@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include <sys/disk.h>
 #include <sys/serial.h>
 
 #include <flanterm.h>
@@ -13,8 +14,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-
-#include "disk.h"
 
 #define LIMINE_REQUEST __attribute__((used, section(".limine_requests")))
 #define LIMINE_REQUESTS_START \
@@ -79,7 +78,8 @@ kmain(void)
 	uint32_t target_lba = 100;
 
 	memset(write_buf, 0, sizeof(write_buf));
-	const char *msg = "THIS MESSAGE IS BEING WRITTEN TO AND READ FROM THE DISK\r\n";
+	const char *msg =
+		"THIS MESSAGE IS BEING WRITTEN TO AND READ FROM THE DISK\r\n";
 	memcpy(write_buf, msg, strlen(msg));
 
 	write_sectors(target_lba, 1, write_buf);
