@@ -1,0 +1,9 @@
+name = "syros"
+description = "Shiny new project"
+version = "0.1.0-dev"
+
+authors = ["LJC"]
+maintainers = ["LJC <ljcottendev@gmail.com>"]
+maintainers-logins = ["Icosa-dev"]
+
+executables = ["syros"]
