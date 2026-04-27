@@ -1,6 +1,6 @@
 # syros
 
-syros is a unix-like operating system for x86-64 computers.
+syros is a unix-like operating system for x86-64 computers written in Ada.
 
 # build
 
